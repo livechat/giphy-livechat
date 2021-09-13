@@ -23,11 +23,12 @@ const containerCss = css`
   width: calc(100% - 20px);
 `;
 
-const gifsCss = css`
+const gifsCss = (withMargin) => css`
   display: flex;
   margin: 10px;
   overflow-y: scroll;
-  margin-top: 48px;
+
+  margin-top: ${withMargin ? "48px" : "5px"};
 `;
 
 const colCss = (numberOfColumns) => css`
@@ -88,7 +89,9 @@ const ChatDetails = () => {
       setIsFetchingGifs(false);
     };
 
-    request();
+    if (selectedTab === "search") {
+      request();
+    }
   }, []);
 
   // Fetching by query
@@ -100,7 +103,9 @@ const ChatDetails = () => {
       setGifs(data);
       setIsFetchingGifs(false);
     };
-    request();
+    if (selectedTab === "search") {
+      request();
+    }
   }, [searchValue]);
 
   // Fetching by page
@@ -112,7 +117,7 @@ const ChatDetails = () => {
       setIsFetchingGifs(false);
     };
 
-    if (page > 0) {
+    if (selectedTab === "search" && page > 0) {
       request();
     }
   }, [page]);
@@ -123,11 +128,21 @@ const ChatDetails = () => {
   const columns = new Array(numberOfColumns).fill([]);
 
   const columnsWithGifs = columns.map((_, colIndex) => {
-    const currentGifs = gifs.filter(
-      (_, gifIndex) => gifIndex % numberOfColumns === colIndex
-    );
+    if (selectedTab === "search") {
+      const currentGifs = gifs.filter(
+        (_, gifIndex) => gifIndex % numberOfColumns === colIndex
+      );
 
-    return currentGifs;
+      return currentGifs;
+    }
+    if (selectedTab === "favourites") {
+      const currentGifs =
+        JSON?.parse(localStorage?.getItem("livechat-giphy-favorites"))?.filter(
+          (_, gifIndex) => gifIndex % numberOfColumns === colIndex
+        ) || [];
+
+      return currentGifs;
+    }
   });
 
   const widget = useRef(null);
@@ -199,50 +214,51 @@ const ChatDetails = () => {
           </TabsList>
         </TabsWrapper>
       </div>
-      {selectedTab === "search" && (
-        <div css={searchWrapperCss}>
+      <div css={searchWrapperCss}>
+        {selectedTab === "search" && (
           <SearchBar
             debounceTime={500}
             onChange={setSearchValue}
             css={searchCss}
             placeholder="Search for gifs..."
           />
-          <div css={gifsCss}>
-            {columnsWithGifs.map((col, index) => (
-              <div css={colCss(numberOfColumns)} key={`column-${index}`}>
-                {col.map((gif, index) => {
-                  return (
-                    <Gif
-                      key={`${gif.slug}-${index}`}
-                      gif={gif}
-                      onGifClick={onGifClick}
-                    />
-                  );
-                })}
-              </div>
-            ))}
-          </div>
-          {isFetchingGifs && (
-            <Loader
-              size="large"
-              css={css`
-                margin-left: calc(50% - 28px);
-              `}
-            />
-          )}
-          {gifs.length > 0 && <EndOfList onEnterViewport={nextPage} />}
+        )}
 
-          {selectedGif.slug && (
-            <GifModal
-              handleModalClose={handleModalClose}
-              onSubmit={() => sendGif(selectedGif)}
-              gif={selectedGif}
-              status={sendingStatus}
-              setStatus={setSendingStatus}
-            />
-          )}
+        <div css={gifsCss(selectedTab === "search")}>
+          {columnsWithGifs.map((col, index) => (
+            <div css={colCss(numberOfColumns)} key={`column-${index}`}>
+              {col.map((gif, index) => {
+                return (
+                  <Gif
+                    key={`${gif.slug}-${index}`}
+                    gif={gif}
+                    onGifClick={onGifClick}
+                  />
+                );
+              })}
+            </div>
+          ))}
         </div>
-      )}
+        {isFetchingGifs && (
+          <Loader
+            size="large"
+            css={css`
+              margin-left: calc(50% - 28px);
+            `}
+          />
+        )}
+        {gifs.length > 0 && <EndOfList onEnterViewport={nextPage} />}
+
+        {selectedGif.slug && (
+          <GifModal
+            handleModalClose={handleModalClose}
+            onSubmit={() => sendGif(selectedGif)}
+            gif={selectedGif}
+            status={sendingStatus}
+            setStatus={setSendingStatus}
+          />
+        )}
+      </div>
 
       <div css={logoCss}>
         <a href="https://giphy.com/" target="_blank" rel="noreferrer">

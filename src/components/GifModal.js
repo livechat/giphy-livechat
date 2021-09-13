@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css, jsx } from "@emotion/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MdFavoriteBorder, MdFavorite } from "react-icons/md";
 
 import { Modal, Button, Toast } from "@livechat/design-system";
@@ -65,6 +65,75 @@ const GifModal = ({ gif, status, setStatus, onSubmit, handleModalClose }) => {
 
   // EXC 1st: add state handling and presenting error
 
+  const checkLocalStorage = () => {
+    try {
+      localStorage.setItem("test", "test");
+      localStorage.removeItem("test");
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    if (checkLocalStorage) {
+      const favoriteGifs = JSON?.parse(
+        localStorage?.getItem("livechat-giphy-favorites")
+      );
+
+      if (favoriteGifs?.some((favGif) => favGif.slug === gif.slug)) {
+        setIsFavorite(true);
+      }
+    }
+  }, []);
+
+  const addToFavorites = () => {
+    if (checkLocalStorage) {
+      const favoriteGifs = JSON?.parse(
+        localStorage?.getItem("livechat-giphy-favorites")
+      );
+
+      const newGif = {
+        slug: gif.slug,
+        title: gif.title,
+        images: { fixed_width: { url: gif.images.fixed_width.url } },
+      };
+
+      if (favoriteGifs) {
+        const newFavGifs = [...favoriteGifs, newGif];
+
+        localStorage?.setItem(
+          "livechat-giphy-favorites",
+          JSON.stringify(newFavGifs)
+        );
+      } else {
+        localStorage?.setItem(
+          "livechat-giphy-favorites",
+          JSON.stringify([newGif])
+        );
+      }
+    }
+  };
+
+  const removeFromFavorites = () => {
+    if (checkLocalStorage) {
+      const favoriteGifs = JSON?.parse(
+        localStorage?.getItem("livechat-giphy-favorites")
+      );
+
+      if (favoriteGifs) {
+        const newFavGifs = favoriteGifs.filter(
+          (favGif) => favGif.slug !== gif.slug
+        );
+
+        localStorage?.setItem(
+          "livechat-giphy-favorites",
+          JSON.stringify(newFavGifs)
+        );
+      }
+    }
+  };
+
   return (
     <div css={modalCss}>
       <Modal
@@ -99,11 +168,17 @@ const GifModal = ({ gif, status, setStatus, onSubmit, handleModalClose }) => {
         {isFavorite ? (
           <MdFavorite
             css={iconCss("#4384f5")}
-            onClick={() => setIsFavorite(false)}
+            onClick={() => {
+              removeFromFavorites();
+              setIsFavorite(false);
+            }}
           />
         ) : (
           <MdFavoriteBorder
-            onClick={() => setIsFavorite(true)}
+            onClick={() => {
+              addToFavorites();
+              setIsFavorite(true);
+            }}
             css={iconCss()}
           />
         )}
