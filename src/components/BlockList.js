@@ -44,53 +44,9 @@ const blockedPhrasesCss = (error) => css`
 
 const BlockList = () => {
   const [withBlockList, setWithBlockList] = useState(false);
-  const [filtering, setFiltering] = useState(["curses", "drastic"]);
-  const [phrasesInput, setPhrasesInput] = useState({ value: "", error: null });
-  const [blockedPhrases, setBlockedPhrases] = useState([]);
-
-  const setPhrasesInputValue = (value) =>
-    setPhrasesInput({ ...phrasesInput, value });
-
-  const setPhrasesInputError = (error) =>
-    setPhrasesInput({ ...phrasesInput, error });
-
-  const onSubmit = () => {
-    const newValue = phrasesInput.value.trim();
-    let errorMsg;
-
-    if (!newValue) {
-      errorMsg = "Please enter a valid phrase.";
-    }
-
-    if (blockedPhrases.includes(newValue)) {
-      errorMsg = "You already added this phrase.";
-    }
-
-    if (!errorMsg) {
-      setBlockedPhrases([...blockedPhrases, phrasesInput.value]);
-      setPhrasesInput({
-        value: "",
-        error: null,
-      });
-    } else {
-      setPhrasesInputError(errorMsg);
-    }
-  };
 
   const onRadioClick = (value) => {
     setWithBlockList(value);
-  };
-
-  const onInputChange = (e) => {
-    setPhrasesInputValue(e.target.value);
-  };
-
-  const onFilteringChange = (type) => {
-    if (filtering.includes(type)) {
-      setFiltering(filtering.filter((el) => el !== type));
-    } else {
-      setFiltering([...filtering, type]);
-    }
   };
 
   return (
@@ -115,59 +71,6 @@ const BlockList = () => {
             description="Exclude certain types of GIFs to ensure the quality of the conversation with your customers."
           />
         </div>
-
-        {withBlockList && (
-          <FormGroup
-            helperText="Choose from the available restrictions or add specific phrases that your agents will not be able to search."
-            css={blockOptionsCss}
-          >
-            <div>
-              <Switch
-                label="Block searching for profanity GIFs"
-                value="curses"
-                filtering={filtering}
-                onFilteringChange={onFilteringChange}
-              />
-              <Switch
-                label="Block searching for outrageous GIFs"
-                value="drastic"
-                filtering={filtering}
-                onFilteringChange={onFilteringChange}
-              />
-              <Switch
-                label="Block searching for vulgar GIFs"
-                value="vulgar"
-                filtering={filtering}
-                onFilteringChange={onFilteringChange}
-              />
-
-              <BlockPhraseInput
-                value={phrasesInput.value}
-                onChange={onInputChange}
-                error={phrasesInput.error}
-                onSubmit={onSubmit}
-              />
-              {!!blockedPhrases.length && (
-                <div css={blockedPhrasesCss(phrasesInput.error)}>
-                  <span>Block list:</span>
-                  {blockedPhrases.map((phrase, index) => {
-                    return (
-                      <BlockedPhrase
-                        key={`phrase-${index}-${phrase}`}
-                        name={phrase}
-                        onDelete={() =>
-                          setBlockedPhrases(
-                            [...blockedPhrases].filter((p) => p !== phrase)
-                          )
-                        }
-                      />
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          </FormGroup>
-        )}
       </FieldGroup>
     </FormGroup>
   );

@@ -1,9 +1,9 @@
 /** @jsxImportSource @emotion/react */
 import { css, jsx } from "@emotion/react";
-import { useState, useMemo } from "react";
+import { subDays } from "date-fns";
 import { FormGroup } from "@livechat/design-system";
 
-import { Filters, Row } from "../components";
+import { Row } from "../components";
 
 const gifs = [
   {
@@ -15,25 +15,25 @@ const gifs = [
   {
     url: "https://media0.giphy.com/media/RQSuZfuylVNAY/200w.gif?cid=e8dffbf9sng2yx8rdchoscwiygzc5cvkm1ztobrmfwnvktq3&rid=200w.gif&ct=g",
     agent: "Agent 2",
-    sentAt: new Date(),
+    sentAt: subDays(new Date(), 5),
     chatId: "ui3k1kls",
   },
   {
     url: "https://media0.giphy.com/media/QvBoMEcQ7DQXK/200w.gif?cid=e8dffbf9sng2yx8rdchoscwiygzc5cvkm1ztobrmfwnvktq3&rid=200w.gif&ct=g",
     agent: "Agent 1",
-    sentAt: new Date(),
+    sentAt: subDays(new Date(), 7),
     chatId: "nmnbh2hb",
   },
   {
     url: "https://media0.giphy.com/media/RQSuZfuylVNAY/200w.gif?cid=e8dffbf9sng2yx8rdchoscwiygzc5cvkm1ztobrmfwnvktq3&rid=200w.gif&ct=g",
     agent: "Agent 3",
-    sentAt: new Date(),
+    sentAt: subDays(new Date(), 10),
     chatId: "asdf0981",
   },
   {
     url: "https://media0.giphy.com/media/QvBoMEcQ7DQXK/200w.gif?cid=e8dffbf9sng2yx8rdchoscwiygzc5cvkm1ztobrmfwnvktq3&rid=200w.gif&ct=g",
     agent: "Agent 2",
-    sentAt: new Date(),
+    sentAt: subDays(new Date(), 20),
     chatId: "lkjkl123",
   },
 ];
@@ -89,23 +89,11 @@ const bodyCss = css`
 const columns = ["GIF", "Agent", "Sent at", "Chat"];
 
 const History = () => {
-  const [selectedAgent, setSelectedAgent] = useState(null);
-
-  const filteredGifs = useMemo(
-    () =>
-      selectedAgent ? gifs.filter((a) => a.agent === selectedAgent) : gifs,
-    [selectedAgent]
-  );
-
   return (
     <FormGroup
       labelText="GIFs history"
       helperText="Monitor what GIFs have been sent by your agents."
     >
-      <Filters
-        selectedAgent={selectedAgent}
-        setSelectedAgent={setSelectedAgent}
-      />
       <div css={tableCss}>
         <div css={headerCss}>
           {columns.map((col) => (
@@ -120,7 +108,7 @@ const History = () => {
           ))}
         </div>
         <div css={bodyCss}>
-          {filteredGifs.map((gif) => (
+          {gifs.map((gif) => (
             <Row key={`row-${gif.agent}-${gif.chatId}`} data={gif} />
           ))}
         </div>
