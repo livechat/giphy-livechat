@@ -107,15 +107,15 @@ const BlockList = () => {
             checked={isBlockListTurnedOff}
             onClick={onRadioClick}
             value="turned-off"
-            title="Allow agents to send all kind of GIFs"
-            description="Your Agents will be able to search for all possible phrases, including those that may not be suitable for use in communicating with the client."
+            title="Allow agents to send all GIFs"
+            description="Your agents will be able to search for all possible phrases, including those that may not be suitable for use in communicating with the customer."
           />
           <Option
             checked={isBlockListTurnedOn}
             onClick={onRadioClick}
             value="turned-on"
             title="Block specific phrases"
-            description="Excluding certain types of GIFs can effectively ensure the quality of the conversation with your clients."
+            description="Exclude certain types of GIFs to ensure the quality of the conversation with your customers."
           />
         </div>
 
@@ -126,19 +126,19 @@ const BlockList = () => {
           >
             <div>
               <Switch
-                label="Block the search for profanity GIFs"
+                label="Block searching for profanity GIFs"
                 value="curses"
                 filtering={filtering}
                 onFilteringChange={onFilteringChange}
               />
               <Switch
-                label="Block the search for outrageous GIFs"
+                label="Block searching for outrageous GIFs"
                 value="drastic"
                 filtering={filtering}
                 onFilteringChange={onFilteringChange}
               />
               <Switch
-                label="Block the search for vulgar GIFs"
+                label="Block searching for vulgar GIFs"
                 value="vulgar"
                 filtering={filtering}
                 onFilteringChange={onFilteringChange}

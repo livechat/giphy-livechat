@@ -100,7 +100,7 @@ const History = () => {
   return (
     <FormGroup
       labelText="GIFs history"
-      helperText="Monitore what kind of GIFs are using your Agents."
+      helperText="Monitor what GIFs have been sent by your agents."
     >
       <Filters
         selectedAgent={selectedAgent}

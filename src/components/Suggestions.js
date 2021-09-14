@@ -28,7 +28,7 @@ const Suggestions = () => {
   return (
     <FormGroup
       labelText="GIFs suggestions"
-      helperText="Search suggestions based on the keywords in the chat messages."
+      helperText="Search suggestions based on keywords in the chat messages."
       css={css`
         display: flex;
         flex-direction: column;
@@ -41,9 +41,9 @@ const Suggestions = () => {
         checked={shouldLikeOffenUsedGifs}
         onClick={() => setShouldLikeOffenUsedGifs(!shouldLikeOffenUsedGifs)}
         id="checkbox-example-1"
-        description="Suggesting GIFs that your Agents are using offen can successfully speedup their workflow."
+        description="Speed up your agents workflow and automatically add the GIFs they use most often to your favorites"
       >
-        Make offen used GIFs favorite automatically.
+        Automatically add GIFs to favorites
       </CheckboxField>
       <div
         css={css`
@@ -54,9 +54,9 @@ const Suggestions = () => {
           checked={gifsSearchSuggestions.isTurnedOn}
           onClick={toggleGifsSearchSuggestions}
           id="checkbox-example-1"
-          description="Suggesting GIFs that your Agents are using offen can successfully speedup their converations."
+          description="Suggestions based on chat messages will make it easier for agents to select suitable GIFs"
         >
-          Suggest GIFs based on chat messages.
+          Suggest GIFs based on chat messages
         </CheckboxField>
       </div>
 
@@ -75,7 +75,7 @@ const Suggestions = () => {
           checked={gifsSearchSuggestions.source === "agents"}
           onClick={() => changeGifsSearchSuggestionsSource("agents")}
           id="checkbox-example-1"
-          description="Suggesting GIFs basing on Agents messages."
+          description="Suggest GIFs basing on agents messages"
         >
           Agents
         </RadioButton>{" "}
@@ -87,7 +87,7 @@ const Suggestions = () => {
           checked={gifsSearchSuggestions.source === "visitors"}
           onClick={() => changeGifsSearchSuggestionsSource("visitors")}
           id="checkbox-example-1"
-          description="Suggesting GIFs basing on Visitors messages."
+          description="Suggest GIFs basing on visitors messages"
         >
           Visitors
         </RadioButton>
@@ -99,7 +99,7 @@ const Suggestions = () => {
           checked={gifsSearchSuggestions.source === "both"}
           onClick={() => changeGifsSearchSuggestionsSource("both")}
           id="checkbox-example-1"
-          description="Suggesting GIFs all messages."
+          description="Suggest GIFs based on all messages in the chat"
         >
           Both
         </RadioButton>
