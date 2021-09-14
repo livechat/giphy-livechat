@@ -13,7 +13,7 @@ const shine = keyframes`
   }
 `;
 
-const loadingCss = (extraLoadingCss) => css`
+const loadingCss = css`
   width: calc(100% - 10px);
   height: 120px;
 
@@ -25,20 +25,18 @@ const loadingCss = (extraLoadingCss) => css`
   );
   animation: ${shine} 1.4s ease infinite;
   background-size: 400% 100%;
-
-  ${extraLoadingCss};
 `;
 
-const gifCss = (loaded, extraLoadingCss) => css`
+const gifCss = (loaded) => css`
   margin: 5px;
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.05s ease-in-out;
 
-  ${!loaded && loadingCss(extraLoadingCss)}
+  ${!loaded && loadingCss}
 `;
 
-const Gif = ({ gif, onGifClick, loadingCss: extraLoadingCss }) => {
+const Gif = ({ gif, onGifClick }) => {
   const [loaded, setLoaded] = useState(false);
 
   const { images } = gif;
@@ -49,7 +47,7 @@ const Gif = ({ gif, onGifClick, loadingCss: extraLoadingCss }) => {
         e.preventDefault();
         onGifClick?.(gif);
       }}
-      css={gifCss(loaded, extraLoadingCss)}
+      css={gifCss(loaded)}
       alt={gif?.title}
       src={images?.fixed_width?.url}
       onLoad={() => setLoaded(true)}

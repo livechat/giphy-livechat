@@ -3,32 +3,20 @@ import { css, jsx } from "@emotion/react";
 import { useState, useEffect, useRef } from "react";
 
 import { createDetailsWidget } from "@livechat/agent-app-sdk";
-import {
-  SearchBar,
-  TabsWrapper,
-  TabsList,
-  Tab,
-  Loader,
-} from "@livechat/design-system";
+import { Loader } from "@livechat/design-system";
 import "@livechat/design-system/dist/design-system.css";
 
 import { getGifs } from "../utils";
 import { useAuth } from "../hooks";
-import { Gif, GifModal, EndOfList } from "../components";
+import { Gif, EndOfList } from "../components";
 import { sendRichMessage } from "../api";
 
-const containerCss = css`
-  margin-top: 15px;
-  margin-left: 10px;
-  width: calc(100% - 20px);
-`;
-
-const gifsCss = (withMargin) => css`
+const gifsCss = css`
   display: flex;
   margin: 10px;
   overflow-y: scroll;
 
-  margin-top: ${withMargin ? "48px" : "5px"};
+  margin-top: 5px;
 `;
 
 const colCss = (numberOfColumns) => css`
@@ -37,17 +25,8 @@ const colCss = (numberOfColumns) => css`
   flex-direction: column;
 `;
 
-const searchCss = css`
-  padding: 10px;
-  position: fixed;
-  top: 44px;
-  z-index: 100;
-  width: calc(100% - 20px);
-  background-color: white;
-`;
-
-const searchWrapperCss = css`
-  height: calc(100vh - 100px);
+const containerCss = css`
+  height: calc(100vh - 50px);
   overflow-y: scroll;
 `;
 
@@ -61,21 +40,12 @@ const logoCss = css`
   }
 `;
 
-const items = [
-  { id: "search", title: "Search", count: 1 },
-  { id: "favourites", title: "Favourites", count: 3 },
-];
-
 const offset = 10;
 
 const ChatDetails = () => {
   const [gifs, setGifs] = useState([]);
-  const [searchValue, setSearchValue] = useState("");
-  const [selectedGif, setSelectedGif] = useState({});
   const [page, setPage] = useState(0);
-  const [sendingStatus, setSendingStatus] = useState();
   const [customerProfile, setCustomerProfile] = useState({});
-  const [selectedTab, setSelectedTab] = useState("search");
   const [isFetchingGifs, setIsFetchingGifs] = useState(false);
 
   const { accessToken: livechatToken } = useAuth();
@@ -89,35 +59,19 @@ const ChatDetails = () => {
       setIsFetchingGifs(false);
     };
 
-    if (selectedTab === "search") {
-      request();
-    }
+    request();
   }, []);
-
-  // Fetching by query
-  useEffect(() => {
-    const request = async () => {
-      setIsFetchingGifs(true);
-      setGifs([]);
-      const { data } = await getGifs(searchValue);
-      setGifs(data);
-      setIsFetchingGifs(false);
-    };
-    if (selectedTab === "search") {
-      request();
-    }
-  }, [searchValue]);
 
   // Fetching by page
   useEffect(() => {
     const request = async () => {
       setIsFetchingGifs(true);
-      const { data } = await getGifs(searchValue, page, offset);
+      const { data } = await getGifs(page, offset);
       setGifs([...gifs, ...data]);
       setIsFetchingGifs(false);
     };
 
-    if (selectedTab === "search" && page > 0) {
+    if (page > 0) {
       request();
     }
   }, [page]);
@@ -128,21 +82,11 @@ const ChatDetails = () => {
   const columns = new Array(numberOfColumns).fill([]);
 
   const columnsWithGifs = columns.map((_, colIndex) => {
-    if (selectedTab === "search") {
-      const currentGifs = gifs.filter(
-        (_, gifIndex) => gifIndex % numberOfColumns === colIndex
-      );
+    const currentGifs = gifs.filter(
+      (_, gifIndex) => gifIndex % numberOfColumns === colIndex
+    );
 
-      return currentGifs;
-    }
-    if (selectedTab === "favourites") {
-      const currentGifs =
-        JSON?.parse(localStorage?.getItem("livechat-giphy-favorites"))?.filter(
-          (_, gifIndex) => gifIndex % numberOfColumns === colIndex
-        ) || [];
-
-      return currentGifs;
-    }
+    return currentGifs;
   });
 
   const widget = useRef(null);
@@ -165,31 +109,18 @@ const ChatDetails = () => {
   }, []);
 
   const onGifClick = (gif) => {
-    setSelectedGif(gif);
+    sendGif(gif);
   };
 
-  const handleModalClose = () => setSelectedGif({});
-
   const sendGif = async (gif) => {
-    setSendingStatus({
-      action: "sending",
-    });
-
     try {
       await sendRichMessage({
         imageUrl: gif.images.original.url,
         chatId: customerProfile.chat.chat_id,
         accessToken: livechatToken,
       });
-      setSendingStatus({
-        action: "success",
-      });
-      handleModalClose();
     } catch (err) {
-      setSendingStatus({
-        action: "error",
-        errorMsg: err.message,
-      });
+      console.log(err);
     }
   };
 
@@ -200,31 +131,7 @@ const ChatDetails = () => {
   return (
     <div>
       <div css={containerCss}>
-        <TabsWrapper>
-          <TabsList>
-            {items.map(({ id, title }) => (
-              <Tab
-                onClick={() => setSelectedTab(id)}
-                key={id}
-                isSelected={selectedTab === id}
-              >
-                {title}
-              </Tab>
-            ))}
-          </TabsList>
-        </TabsWrapper>
-      </div>
-      <div css={searchWrapperCss}>
-        {selectedTab === "search" && (
-          <SearchBar
-            debounceTime={500}
-            onChange={setSearchValue}
-            css={searchCss}
-            placeholder="Search for gifs..."
-          />
-        )}
-
-        <div css={gifsCss(selectedTab === "search")}>
+        <div css={gifsCss}>
           {columnsWithGifs.map((col, index) => (
             <div css={colCss(numberOfColumns)} key={`column-${index}`}>
               {col.map((gif, index) => {
@@ -248,16 +155,6 @@ const ChatDetails = () => {
           />
         )}
         {gifs.length > 0 && <EndOfList onEnterViewport={nextPage} />}
-
-        {selectedGif.slug && (
-          <GifModal
-            handleModalClose={handleModalClose}
-            onSubmit={() => sendGif(selectedGif)}
-            gif={selectedGif}
-            status={sendingStatus}
-            setStatus={setSendingStatus}
-          />
-        )}
       </div>
 
       <div css={logoCss}>
