@@ -2,9 +2,9 @@ import axios from "axios";
 
 const apiUrl = "https://api.livechatinc.com/v3.1";
 
-const getHeaders = (at) => ({
+const getHeaders = (accessToken) => ({
   headers: {
-    Authorization: `Bearer ${at}`,
+    Authorization: `Bearer ${accessToken}`,
   },
 });
 

@@ -40,9 +40,9 @@ const Announcements = ({ onCtaClick }) => {
           },
         }}
       >
-        <h2>Monitore your Agenrs GIFs usage</h2>
+        <h2>Monitor your Agents GIFs usage</h2>
         <p>
-          New you are able to analyze and monitore what kind of GIFs your Agents
+          New you are able to analyze and monitor what kind of GIFs your Agents
           are using.
         </p>
       </InAppMessage>

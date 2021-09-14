@@ -137,7 +137,7 @@ const ChatDetails = () => {
     }
     if (selectedTab === "favourites") {
       const currentGifs =
-        JSON?.parse(localStorage?.getItem("livechat-giphy-favorites"))?.filter(
+        JSON.parse(localStorage?.getItem("livechat-giphy-favorites"))?.filter(
           (_, gifIndex) => gifIndex % numberOfColumns === colIndex
         ) || [];
 

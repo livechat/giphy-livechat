@@ -43,7 +43,7 @@ const blockedPhrasesCss = (error) => css`
 `;
 
 const BlockList = () => {
-  const [blockList, setWithBlockList] = useState("turned-on");
+  const [withBlockList, setWithBlockList] = useState(false);
   const [filtering, setFiltering] = useState(["curses", "drastic"]);
   const [phrasesInput, setPhrasesInput] = useState({ value: "", error: null });
   const [blockedPhrases, setBlockedPhrases] = useState([]);
@@ -53,9 +53,6 @@ const BlockList = () => {
 
   const setPhrasesInputError = (error) =>
     setPhrasesInput({ ...phrasesInput, error });
-
-  const isBlockListTurnedOn = blockList === "turned-on";
-  const isBlockListTurnedOff = blockList === "turned-off";
 
   const onSubmit = () => {
     const newValue = phrasesInput.value.trim();
@@ -104,22 +101,22 @@ const BlockList = () => {
       <FieldGroup>
         <div css={radioButtonsWrapperCss}>
           <Option
-            checked={isBlockListTurnedOff}
+            checked={!withBlockList}
             onClick={onRadioClick}
-            value="turned-off"
+            value={false}
             title="Allow agents to send all GIFs"
             description="Your agents will be able to search for all possible phrases, including those that may not be suitable for use in communicating with the customer."
           />
           <Option
-            checked={isBlockListTurnedOn}
+            checked={withBlockList}
             onClick={onRadioClick}
-            value="turned-on"
+            value={true}
             title="Block specific phrases"
             description="Exclude certain types of GIFs to ensure the quality of the conversation with your customers."
           />
         </div>
 
-        {isBlockListTurnedOn && (
+        {withBlockList && (
           <FormGroup
             helperText="Choose from the available restrictions or add specific phrases that your agents will not be able to search."
             css={blockOptionsCss}

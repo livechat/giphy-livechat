@@ -4,7 +4,7 @@ import { useState } from "react";
 import { FormGroup, CheckboxField, RadioButton } from "@livechat/design-system";
 
 const Suggestions = () => {
-  const [shouldLikeOffenUsedGifs, setShouldLikeOffenUsedGifs] = useState(false);
+  const [shouldLikeOftenUsedGifs, setShouldLikeOftenUsedGifs] = useState(false);
   const [gifsSearchSuggestions, setGifsSearchSuggestions] = useState({
     isTurnedOn: false,
     source: "agents",
@@ -38,8 +38,8 @@ const Suggestions = () => {
         css={css`
           margin-top: 10px;
         `}
-        checked={shouldLikeOffenUsedGifs}
-        onClick={() => setShouldLikeOffenUsedGifs(!shouldLikeOffenUsedGifs)}
+        checked={shouldLikeOftenUsedGifs}
+        onClick={() => setShouldLikeOftenUsedGifs(!shouldLikeOftenUsedGifs)}
         id="checkbox-example-1"
         description="Speed up your agents workflow and automatically add the GIFs they use most often to your favorites"
       >

@@ -77,7 +77,7 @@ const GifModal = ({ gif, status, setStatus, onSubmit, handleModalClose }) => {
 
   useEffect(() => {
     if (checkLocalStorage) {
-      const favoriteGifs = JSON?.parse(
+      const favoriteGifs = JSON.parse(
         localStorage?.getItem("livechat-giphy-favorites")
       );
 
@@ -89,7 +89,7 @@ const GifModal = ({ gif, status, setStatus, onSubmit, handleModalClose }) => {
 
   const addToFavorites = () => {
     if (checkLocalStorage) {
-      const favoriteGifs = JSON?.parse(
+      const favoriteGifs = JSON.parse(
         localStorage?.getItem("livechat-giphy-favorites")
       );
 
@@ -117,7 +117,7 @@ const GifModal = ({ gif, status, setStatus, onSubmit, handleModalClose }) => {
 
   const removeFromFavorites = () => {
     if (checkLocalStorage) {
-      const favoriteGifs = JSON?.parse(
+      const favoriteGifs = JSON.parse(
         localStorage?.getItem("livechat-giphy-favorites")
       );
 
