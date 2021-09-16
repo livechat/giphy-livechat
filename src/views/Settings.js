@@ -29,7 +29,7 @@ const tabsWrapperCss = css`
 `;
 
 const Settings = () => {
-  const [selectedTab, setSelectedTab] = useState("history");
+  const [selectedTab, setSelectedTab] = useState("block-list");
 
   return (
     <div css={containerCss}>
@@ -51,7 +51,7 @@ const Settings = () => {
       {selectedTab === "block-list" && <BlockList />}
       {selectedTab === "suggestions" && <Suggestions />}
       {selectedTab === "history" && <History />}
-      {/* <Announcements onCtaClick={() => setSelectedTab("history")} /> */}
+      <Announcements onCtaClick={() => setSelectedTab("history")} />
     </div>
   );
 };
