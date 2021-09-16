@@ -51,7 +51,7 @@ const Settings = () => {
       {selectedTab === "block-list" && <BlockList />}
       {selectedTab === "suggestions" && <Suggestions />}
       {selectedTab === "history" && <History />}
-      <Announcements onCtaClick={() => setSelectedTab("history")} />
+      {/* <Announcements onCtaClick={() => setSelectedTab("history")} /> */}
     </div>
   );
 };

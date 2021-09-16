@@ -25,7 +25,7 @@ const Suggestions = () => {
         description="Speed up your agents workflow and automatically add the GIFs they use most often to your favorites"
       >
         Automatically add GIFs to favorites
-      </CheckboxField>{" "}
+      </CheckboxField>
     </FormGroup>
   );
 };

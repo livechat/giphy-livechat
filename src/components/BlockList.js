@@ -1,13 +1,10 @@
 /** @jsxImportSource @emotion/react */
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { css, jsx } from "@emotion/react";
 
 import { FormGroup, FieldGroup } from "@livechat/design-system";
 
-import BlockedPhrase from "./BlockedPhrase";
-import Switch from "./Switch";
 import Option from "./Option";
-import BlockPhraseInput from "./BlockPhraseInput";
 
 const radioButtonsWrapperCss = css`
   display: flex;
@@ -17,33 +14,8 @@ const radioButtonsWrapperCss = css`
   }
 `;
 
-const blockOptionsCss = css`
-  margin-top: 20px;
-
-  .lc-form-group__header {
-    margin-bottom: 10px;
-  }
-
-  .lc-form-group__helper {
-    border-bottom: none;
-  }
-`;
-
-const blockedPhrasesCss = (error) => css`
-  margin-top: ${error ? "55px" : "35px"};
-  color: #424d57;
-  font-size: 15px;
-
-  > span {
-    display: inline-block;
-    :not(:last-child) {
-      margin-right: 5px;
-    }
-  }
-`;
-
 const BlockList = () => {
-  const [withBlockList, setWithBlockList] = useState(false);
+  const [withBlockList, setWithBlockList] = useState(true);
 
   const onRadioClick = (value) => {
     setWithBlockList(value);
